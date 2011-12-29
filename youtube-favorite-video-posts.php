@@ -52,6 +52,8 @@ add_action( 'jf_yfvp_hourly_action', 'jf_yfvp_on_the_hour' );
 function jf_yfvp_plugin_activation(){
     $current_jf_yfvp_options = get_option( 'jf_yfvp_options' );
     $jf_yfvp_options[ 'youtube_rss_feed' ] = $current_jf_yfvp_options[ 'youtube_rss_feed' ] ? $current_jf_yfvp_options[ 'youtube_rss_feed' ] : '';
+    $jf_yfvp_options[ 'embed_width' ] = $current_jf_yfvp_options[ 'embed_width' ] ? $current_jf_yfvp_options[ 'embed_width' ] : 330;
+    $jf_yfvp_options[ 'embed_height' ] = $current_jf_yfvp_options[ 'embed_height' ] ? $current_jf_yfvp_options[ 'embed_height' ] : 270;
     $jf_yfvp_options[ 'post_type' ] = $current_jf_yfvp_options[ 'post_type' ] ? $current_jf_yfvp_options[ 'post_type' ] : 'jf_yfvp_youtube';
     $jf_yfvp_options[ 'post_status' ] = $current_jf_yfvp_options[ 'post_status' ] ? $current_jf_yfvp_options[ 'post_status' ] : 'publish';
     $jf_yfvp_options[ 'fetch_interval' ] = $current_jf_yfvp_options[ 'fetch_interval' ] ? $current_jf_yfvp_options[ 'fetch_interval' ] : 'hourly';
@@ -142,10 +144,12 @@ function jf_yfvp_register_settings(){
     add_settings_section( 'jf_yfvp_section_main', '', 'jf_yfvp_section_text', 'jf_yfvp' );
     add_settings_section( 'jf_yfvp_section_post_type', '', 'jf_yfvp_section_post_type_text', 'jf_yfvp' );
     add_settings_section( 'jf_yfvp_section_interval', '', 'jf_yfvp_section_interval_text', 'jf_yfvp' );
-    add_settings_field( 'jf_yfvp_youtube_rss_feed', 'Youtube Favorites RSS Feed:', 'jf_yfvp_youtube_rss_feed_text', 'jf_yfvp', 'jf_yfvp_section_main' );
+    add_settings_field( 'jf_yfvp_youtube_rss_feed', 'Youtube Username:', 'jf_yfvp_youtube_rss_feed_text', 'jf_yfvp', 'jf_yfvp_section_main' );
+    add_settings_field( 'jf_yfvp_embed_width', 'Default Embed Width:', 'jf_yfvp_embed_width_text', 'jf_yfvp', 'jf_yfvp_section_main' );
+    add_settings_field( 'jf_yfvp_embed_height', 'Default Embed Height:', 'jf_yfvp_embed_height_text', 'jf_yfvp', 'jf_yfvp_section_main' );
     add_settings_field( 'jf_yfvp_max_fetch_items', 'Max Items To Fetch:', 'jf_yfvp_max_fetch_items_text', 'jf_yfvp', 'jf_yfvp_section_main' );
     add_settings_field( 'jf_yfvp_post_type', 'Post Type:', 'jf_yfvp_post_type_text', 'jf_yfvp', 'jf_yfvp_section_post_type' );
-    add_settings_field( 'jf_yfvp_post_status', __( 'Default Post Status:', 'instapaper-liked-article-posts' ) , 'jf_yfvp_post_status_text', 'jf_yfvp', 'jf_yfvp_section_post_type' );
+    add_settings_field( 'jf_yfvp_post_status', __( 'Default Post Status:', 'youtube-favorite-video-posts' ) , 'jf_yfvp_post_status_text', 'jf_yfvp', 'jf_yfvp_section_post_type' );
     add_settings_field( 'jf_yfvp_fetch_interval', 'Feed Fetch Interval: ', 'jf_yfvp_fetch_interval_text', 'jf_yfvp', 'jf_yfvp_section_interval' );
 }
 
@@ -169,12 +173,25 @@ function jf_yfvp_section_interval_text(){
     echo '<p style="margin-left:12px;">The next check is scheduled to run at ' . $user_next_cron . ', which occurs in ' . $seconds_till_cron . ' seconds.</p>';
 }
 
+function jf_yfvp_embed_width_text(){
+    $jf_yfvp_options = get_option( 'jf_yfvp_options' );
+    echo '<input style="width: 100px;" type="text" id="jf_yfvp_embed_width"
+                        name="jf_yfvp_options[embed_width]"
+                        value="' . $jf_yfvp_options[ 'embed_width' ] . '">';
+}
+
+function jf_yfvp_embed_height_text(){
+    $jf_yfvp_options = get_option( 'jf_yfvp_options' );
+    echo '<input style="width: 100px;" type="text" id="jf_yfvp_embed_height"
+                        name="jf_yfvp_options[embed_height]"
+                        value="' . $jf_yfvp_options[ 'embed_height' ] . '">';
+}
+
 function jf_yfvp_youtube_rss_feed_text(){
     $jf_yfvp_options = get_option( 'jf_yfvp_options' );
-    echo '<input style="width: 400px;" type="text" id="jf_yfvp_youtube_rss_feed"
+    echo '<input style="width: 200px;" type="text" id="jf_yfvp_youtube_rss_feed"
                              name="jf_yfvp_options[youtube_rss_feed]"
                              value="' . $jf_yfvp_options[ 'youtube_rss_feed' ] . '">';
-    echo '<br><em>http://gdata.youtube.com/feeds/base/users/XXXXXXXXXXXX/favorites?alt=rss&orderby=published</em>';
 }
 
 function jf_yfvp_post_type_text(){
@@ -273,6 +290,8 @@ function jf_yfvp_options_validate( $input ) {
     wp_schedule_event( ( time() + 30 ) , $input[ 'fetch_interval' ], 'jf_yfvp_hourly_action' );
 
     $input[ 'max_fetch_items' ] = absint( $input[ 'max_fetch_items' ] );
+    $input[ 'embed_width' ] = absint( $input[ 'embed_width' ] );
+    $input[ 'embed_height' ] = absint( $input[ 'embed_height' ] );
 
     return $input;
 }
@@ -321,7 +340,7 @@ function jf_yfvp_on_the_hour(){
     /*  Go get some options! */
     $youtube_options = get_option( 'jf_yfvp_options' );
     /*  The feed URL we'll be grabbing. */
-    $youtube_feed_url = $youtube_options[ 'youtube_rss_feed' ];
+    $youtube_feed_url = 'http://gdata.youtube.com/feeds/base/users/' . $youtube_options[ 'youtube_rss_feed' ] . '/favorites?alt=rss';
     /*  The post type we'll be saving as. We designed it to be custom, but why not allow anything. */
     $post_type = $youtube_options[ 'post_type' ];
     /*  The post status we'll use. */
@@ -336,8 +355,10 @@ function jf_yfvp_on_the_hour(){
         foreach( $youtube_items as $item ){
             $video_token = substr( $item->get_id() ,43 );
 
-            $video_embed_code = '<iframe width="330" height="270" src="http://www.youtube.com/embed/';
-            $video_embed_code .= $video_token . '" frameborder="0" allowfullscreen></iframe>';
+            $video_embed_code = '<iframe width=\"' . $youtube_options[ 'embed_width' ] .
+                                '\" height=\"' . $youtube_options[ 'embed_height' ] .
+                                '\" src=\"http://www.youtube.com/embed/' .
+                                $video_token . '\" frameborder=\"0\" allowfullscreen></iframe>';
 
             $item_title = $item->get_title();
 
