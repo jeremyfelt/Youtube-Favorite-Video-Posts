@@ -111,7 +111,7 @@ function jf_yfvp_view_settings(){
     /*  Display the main settings view for Youtube Favorite Video Posts. */
     echo '<div class="wrap">
         <div class="icon32" id="icon-options-general"></div>
-            <h2>' . __( 'Youtube Favoire Video Posts', 'youtube-favorite-video-posts' ) . '</h2>
+            <h2>' . __( 'Youtube Favorite Video Posts', 'youtube-favorite-video-posts' ) . '</h2>
             <h3>' . __( 'Overview', 'youtube-favorite-video-posts' ) . ':</h3>
             <p style="margin-left:12px;max-width:640px;">
             ' . __( 'The settings below will help determine where to check for your favorite Youtube videos, how often to
@@ -334,7 +334,7 @@ function jf_yfvp_on_the_hour(){
         $max_items = $youtube_feed->get_item_quantity( absint( $youtube_options[ 'max_fetch_items' ] ) );
         $youtube_items = $youtube_feed->get_items(0, $max_items);
         foreach( $youtube_items as $item ){
-            $video_token = substr( $item->get_guid() ,43 );
+            $video_token = substr( $item->get_id() ,43 );
 
             $video_embed_code = '<iframe width="330" height="270" src="http://www.youtube.com/embed/';
             $video_embed_code .= $video_token . '" frameborder="0" allowfullscreen></iframe>';
@@ -364,9 +364,12 @@ function jf_yfvp_on_the_hour(){
                     'post_author' => 1,
                     'post_status' => $post_status,
                     'post_type' => $post_type,
+                    'filter' => true
                 );
 
+                kses_remove_filters();
                 $item_post_id = wp_insert_post( $youtube_post );
+                kses_init_filters();
                 add_post_meta( $item_post_id, 'jf_yfvp_hash', $item_hash, true );
             }
         }
