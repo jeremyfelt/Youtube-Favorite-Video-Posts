@@ -1,8 +1,8 @@
 <?php
 /*
-Plugin Name: Youtube Favorite Video Posts
+Plugin Name: YouTube Favorite Video Posts
 Plugin URI: http://www.jeremyfelt.com/wordpress/plugins/youtube-favorite-video-posts
-Description: Checks your Youtube favorite videos RSS feed and creates new posts in a custom post type.
+Description: Checks your YouTube favorite videos RSS feed and creates new posts in a custom post type.
 Version: 0.1
 Author: Jeremy Felt
 Author URI: http://www.jeremyfelt.com
@@ -105,7 +105,7 @@ function jf_yfvp_edit_icon(){
 
 function jf_yfvp_add_settings(){
     /*  Add the sub-menu item under the Settings top-level menu. */
-    add_options_page( __('Youtube Videos', 'youtube-favorite-video-posts' ), __('Youtube Videos', 'youtube-favorite-video-posts'), 'manage_options', 'youtube-favorite-video-posts-settings', 'jf_yfvp_view_settings' );
+    add_options_page( __('YouTube Favorites', 'youtube-favorite-video-posts' ), __('YouTube Favorites', 'youtube-favorite-video-posts'), 'manage_options', 'youtube-favorite-video-posts-settings', 'jf_yfvp_view_settings' );
 }
 
 function jf_yfvp_view_settings(){
@@ -113,16 +113,19 @@ function jf_yfvp_view_settings(){
     /*  Display the main settings view for Youtube Favorite Video Posts. */
     echo '<div class="wrap">
         <div class="icon32" id="icon-options-general"></div>
-            <h2>' . __( 'Youtube Favorite Video Posts', 'youtube-favorite-video-posts' ) . '</h2>
+            <h2>' . __( 'YouTube Favorite Video Posts', 'youtube-favorite-video-posts' ) . '</h2>
             <h3>' . __( 'Overview', 'youtube-favorite-video-posts' ) . ':</h3>
             <p style="margin-left:12px;max-width:640px;">
-            ' . __( 'The settings below will help determine where to check for your favorite Youtube videos, how often to
+            ' . __( 'The settings below will help determine where to check for your favorite YouTube videos, how often to
             look for them, and how they should be stored once new items are found.', 'youtube-favorite-video-posts' ) . '</p>
             <p style="margin-left:12px;max-width:640px;">
-                The most important part of this process will be to determine the RSS feed for your favorite Youtube videos.
+                The most important part of this process will be to determine the RSS feed for your favorite YouTube videos. In order
+                to do this, your username <strong>must</strong> be filled out below. This can usually be found in the upper right hand
+                corner of <a href="http://www.youtube.com">YouTube.com</a>.
             </p>
             <ol style="margin-left:36px;">
-                <li>Instructions soon....</li>
+                <li>Username must be filled in below. Email address will not work.</li>
+                <li>The embed width and height settings will be applied to the iframe in your post content.</li>
             </ol>';
 
        echo '<form method="post" action="options.php">';
@@ -144,7 +147,7 @@ function jf_yfvp_register_settings(){
     add_settings_section( 'jf_yfvp_section_main', '', 'jf_yfvp_section_text', 'jf_yfvp' );
     add_settings_section( 'jf_yfvp_section_post_type', '', 'jf_yfvp_section_post_type_text', 'jf_yfvp' );
     add_settings_section( 'jf_yfvp_section_interval', '', 'jf_yfvp_section_interval_text', 'jf_yfvp' );
-    add_settings_field( 'jf_yfvp_youtube_rss_feed', 'Youtube Username:', 'jf_yfvp_youtube_rss_feed_text', 'jf_yfvp', 'jf_yfvp_section_main' );
+    add_settings_field( 'jf_yfvp_youtube_rss_feed', 'YouTube Username:', 'jf_yfvp_youtube_rss_feed_text', 'jf_yfvp', 'jf_yfvp_section_main' );
     add_settings_field( 'jf_yfvp_embed_width', 'Default Embed Width:', 'jf_yfvp_embed_width_text', 'jf_yfvp', 'jf_yfvp_section_main' );
     add_settings_field( 'jf_yfvp_embed_height', 'Default Embed Height:', 'jf_yfvp_embed_height_text', 'jf_yfvp', 'jf_yfvp_section_main' );
     add_settings_field( 'jf_yfvp_max_fetch_items', 'Max Items To Fetch:', 'jf_yfvp_max_fetch_items_text', 'jf_yfvp', 'jf_yfvp_section_main' );
@@ -159,7 +162,7 @@ function jf_yfvp_section_text(){
 
 function jf_yfvp_section_post_type_text(){
     echo '<h3>Custom Or Default Post Type</h3>
-    <p style="margin-left:12px;max-width: 640px;">A new custom post type that adds an \'Youtube\' slug to new items has been added and selected by default.
+    <p style="margin-left:12px;max-width: 640px;">A new custom post type that adds an \'youtube\' slug to new items has been added and selected by default.
     You can change this to any other available post type if you would like.</p>';
 }
 
@@ -301,18 +304,18 @@ function jf_yfvp_create_youtube_type(){
     register_post_type( 'jf_yfvp_youtube',
         array(
             'labels' => array(
-                'name' => __( 'Youtube' ),
-                'singular_name' => __( 'Youtube Favorite' ),
-                'all_items' => __( 'All Youtube Favorites' ),
-                'add_new_item' => __( 'Add Youtube Favorite' ),
-                'edit_item' => __( 'Edit Youtube Favorite' ),
-                'new_item' => __( 'New Youtube Favorite' ),
-                'view_item' => __( 'View Youtube Favorite' ),
-                'search_items' => __( 'Search Youtube Favorites' ),
-                'not_found' => __( 'No Youtube Favorites found' ),
-                'not_found_in_trash' => __( 'No Youtube Favorites found in trash' ),
+                'name' => __( 'YouTube' ),
+                'singular_name' => __( 'YouTube Favorite' ),
+                'all_items' => __( 'All YouTube Favorites' ),
+                'add_new_item' => __( 'Add YouTube Favorite' ),
+                'edit_item' => __( 'Edit YouTube Favorite' ),
+                'new_item' => __( 'New YouTube Favorite' ),
+                'view_item' => __( 'View YouTube Favorite' ),
+                'search_items' => __( 'Search YouTube Favorites' ),
+                'not_found' => __( 'No YouTube Favorites found' ),
+                'not_found_in_trash' => __( 'No YouTube Favorites found in trash' ),
             ),
-        'description' => 'Youtube posts created by the Youtube Favorite Video Posts plugin.',
+        'description' => 'YouTube posts created by the YouTube Favorite Video Posts plugin.',
         'public' => true,
         'menu_icon' => plugins_url( '/images/youtube-icon-16.png', __FILE__ ),
         'menu_position' => 5,
@@ -360,7 +363,8 @@ function jf_yfvp_on_the_hour(){
                                 '\" src=\"http://www.youtube.com/embed/' .
                                 $video_token . '\" frameborder=\"0\" allowfullscreen></iframe>';
 
-            $item_title = $item->get_title();
+            /*  We're disabling the kses filters below, so we need to clean up the title as YouTube allows " and the like. */
+            $item_title = esc_html( $item->get_title() );
 
             $item_hash = md5( $video_token );
 
@@ -398,5 +402,3 @@ function jf_yfvp_on_the_hour(){
         /*  Uhhh, feels a little shady to die silently, but for now that's all we got. */
     }
 }
-
-?>
