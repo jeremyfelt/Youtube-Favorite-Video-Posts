@@ -3,7 +3,7 @@
 Plugin Name: YouTube Favorite Video Posts
 Plugin URI: http://www.jeremyfelt.com/wordpress/plugins/youtube-favorite-video-posts
 Description: Checks your YouTube favorite videos RSS feed and creates new posts in a custom post type.
-Version: 0.1
+Version: 0.2
 Author: Jeremy Felt
 Author URI: http://www.jeremyfelt.com
 License: GPL2
@@ -24,8 +24,6 @@ License: GPL2
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-
-/*  jf_yfvp */
 
 /*  Things happen when we activate and deactivate the plugin of course. */
 register_activation_hook( __FILE__, 'jf_yfvp_plugin_activation' );
@@ -66,8 +64,8 @@ function jf_yfvp_plugin_activation(){
     /*  Flush the rewrite rules so that the new custom post type works. */
     flush_rewrite_rules( false );
 
-    /*  Schedule the first CRON even to happen 30 seconds from now, then hourly after that. */
-    wp_schedule_event( ( time() + 30 ) , 'hourly', 'jf_yfvp_hourly_action' );
+    /*  Schedule the first CRON event to happen 60 seconds from now, then hourly after that. */
+    wp_schedule_event( ( time() + 60 ) , 'hourly', 'jf_yfvp_hourly_action' );
     /*  TODO: Make frequency a configurable option. */
 }
 
@@ -178,23 +176,26 @@ function jf_yfvp_section_interval_text(){
 
 function jf_yfvp_embed_width_text(){
     $jf_yfvp_options = get_option( 'jf_yfvp_options' );
-    echo '<input style="width: 100px;" type="text" id="jf_yfvp_embed_width"
-                        name="jf_yfvp_options[embed_width]"
-                        value="' . $jf_yfvp_options[ 'embed_width' ] . '">';
+    echo '<input style="width: 100px;" type="text"
+                 id="jf_yfvp_embed_width"
+                 name="jf_yfvp_options[embed_width]"
+                 value="' . $jf_yfvp_options[ 'embed_width' ] . '">';
 }
 
 function jf_yfvp_embed_height_text(){
     $jf_yfvp_options = get_option( 'jf_yfvp_options' );
-    echo '<input style="width: 100px;" type="text" id="jf_yfvp_embed_height"
-                        name="jf_yfvp_options[embed_height]"
-                        value="' . $jf_yfvp_options[ 'embed_height' ] . '">';
+    echo '<input style="width: 100px;" type="text"
+                 id="jf_yfvp_embed_height"
+                 name="jf_yfvp_options[embed_height]"
+                 value="' . $jf_yfvp_options[ 'embed_height' ] . '">';
 }
 
 function jf_yfvp_youtube_rss_feed_text(){
     $jf_yfvp_options = get_option( 'jf_yfvp_options' );
-    echo '<input style="width: 200px;" type="text" id="jf_yfvp_youtube_rss_feed"
-                             name="jf_yfvp_options[youtube_rss_feed]"
-                             value="' . $jf_yfvp_options[ 'youtube_rss_feed' ] . '">';
+    echo '<input style="width: 200px;" type="text"
+                 id="jf_yfvp_youtube_rss_feed"
+                 name="jf_yfvp_options[youtube_rss_feed]"
+                 value="' . $jf_yfvp_options[ 'youtube_rss_feed' ] . '">';
 }
 
 function jf_yfvp_post_type_text(){
@@ -209,36 +210,19 @@ function jf_yfvp_post_type_text(){
     echo '<select id="jf_yfvp_post_type" name="jf_yfvp_options[post_type]">';
 
     foreach( $post_types as $pt ){
-        echo '<option value="' . $pt . '"';
-
-        if ( $pt == $jf_yfvp_options[ 'post_type' ] ) echo ' selected="yes" ';
-
-        echo '>' . $pt . '</option>';
+        echo '<option value="' . $pt . '" ' . selected( $jf_yfvp_options[ 'post_type' ], $pt, false ) . '>' . $pt . '</option>';
     }
+
+    echo '</select>';
 }
 
 function jf_yfvp_post_status_text(){
     $jf_yfvp_options = get_option( 'jf_yfvp_options' );
 
-    /*  TODO: Definitely a better way to do this. See above function and do that. */
-    $s1 = '';
-    $s2 = '';
-    $s3 = '';
-
-    if( 'draft' == $jf_yfvp_options[ 'post_status' ] ){
-        $s1 = 'selected="yes"';
-    }elseif( 'publish' == $jf_yfvp_options[ 'post_status' ] ){
-        $s2 = 'selected="yes"';
-    }elseif( 'private' == $jf_yfvp_options[ 'post_status' ] ){
-        $s3 = 'selected="yes"';
-    }else{
-        $s2 = 'selected="yes"';
-    }
-
     echo '<select id="jf_yfvp_post_status" name="jf_yfvp_options[post_status]">
-            <option value="draft" ' . $s1 . '>draft</option>
-            <option value="publish" ' . $s2 . '>publish</option>
-            <option value="private" ' . $s3 . '>private</option>
+            <option value="draft" '   . selected( $jf_yfvp_options[ 'post_status' ], 'draft', false )   . '>draft</option>
+            <option value="publish" ' . selected( $jf_yfvp_options[ 'post_status' ], 'publish', false ) . '>publish</option>
+            <option value="private" ' . selected( $jf_yfvp_options[ 'post_status' ], 'private', false ) . '>private</option>
           </select>';
 }
 
@@ -250,11 +234,7 @@ function jf_yfvp_fetch_interval_text(){
     echo '<select id="jf_yfvp_fetch_interval" name="jf_yfvp_options[fetch_interval]">';
 
     foreach( $intervals as $i ){
-        echo '<option value="' . $i . '" ';
-
-        if( $i == $jf_yfvp_options[ 'fetch_interval' ] ) echo 'selected="yes"';
-
-        echo '>' . $i . '</option>';
+        echo '<option value="' . $i . '" ' . selected( $jf_yfvp_options[ 'fetch_interval' ], $i, false ) . '>' . $i . '</option>';
     }
 
     echo '</select>';
@@ -338,7 +318,7 @@ function jf_yfvp_create_youtube_type(){
 }
 
 function jf_yfvp_on_the_hour(){
-    /*  Grab the configured Instapaper Liked RSS feed and create new posts based on that. */
+    /*  Grab the configured YouTube favorites RSS feed and create new posts based on that. */
 
     /*  Go get some options! */
     $youtube_options = get_option( 'jf_yfvp_options' );
@@ -366,6 +346,8 @@ function jf_yfvp_on_the_hour(){
             /*  We're disabling the kses filters below, so we need to clean up the title as YouTube allows " and the like. */
             $item_title = esc_html( $item->get_title() );
 
+            /*  Create a hash of the video token to store as post meta in order to check for unique content if a video
+                of the same title is stored one day. */
             $item_hash = md5( $video_token );
 
             if ( get_page_by_title( $item_title, 'OBJECT', $post_type ) ){
