@@ -3,7 +3,7 @@
 Plugin Name: YouTube Favorite Video Posts
 Plugin URI: http://www.jeremyfelt.com/wordpress/plugins/youtube-favorite-video-posts
 Description: Checks your YouTube favorite videos RSS feed and creates new posts in a custom post type.
-Version: 0.2
+Version: 0.3
 Author: Jeremy Felt
 Author URI: http://www.jeremyfelt.com
 License: GPL2
@@ -317,6 +317,12 @@ function jf_yfvp_create_youtube_type(){
     );
 }
 
+function jf_yfvp_modify_cache_lifetime( $seconds ) {
+    /* The default SimplePie cache lifetime is 12 hours. We really do want to update
+        more frequently, so we'll make it 30 seconds during our update. */
+    return 30;
+}
+
 function jf_yfvp_on_the_hour(){
     /*  Grab the configured YouTube favorites RSS feed and create new posts based on that. */
 
@@ -328,8 +334,11 @@ function jf_yfvp_on_the_hour(){
     $post_type = $youtube_options[ 'post_type' ];
     /*  The post status we'll use. */
     $post_status = $youtube_options[ 'post_status' ];
+
+    add_filter( 'wp_feed_cache_transient_lifetime', 'jf_yfvp_modify_cache_lifetime' );
     /*  Now fetch with the WordPress SimplePie function. */
     $youtube_feed = fetch_feed( $youtube_feed_url );
+    remove_filter( 'wp_feed_cache_transient_lifetime', 'jf_yfvp_modify_cach_lifetime' );
 
     if ( ! is_wp_error( $youtube_feed ) ){
         /*  Feed looks like a good object, continue. */
