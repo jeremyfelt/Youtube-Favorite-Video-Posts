@@ -5,7 +5,7 @@ Donate link: http://www.jeremyfelt.com/wordpress/plugins/youtube-favorite-video-
 Tags: youtube, custom post type, embed, video, rss, feed
 Requires at least: 3.2.1
 Tested up to: 3.3
-Stable tag: 0.2
+Stable tag: 0.3
 
 YouTube Favorite Video Posts grabs videos you mark as favorites in YouTube and adds them to WordPress under a custom post type.
 
@@ -50,6 +50,10 @@ That's it!
 1. An overview of the YouTube Favorite Video Posts settings screen.
 
 == Changelog ==
+= 0.3 =
+
+* Because of the default SimplePie cache, new items were only being pulled every 12 hours (at the least). Modified to make this feed fresh for every check.
+
 = 0.2 =
 
 * Video titles with double quotes were not saving correctly. Added appropriate escaping.
@@ -60,6 +64,10 @@ That's it!
 * In which a plugin begins its life.
 
 == Upgrade Notice ==
+= 0.3 =
+
+* Things should feel nicer now. :)
+
 = 0.1 =
 
 * Initial installation.
