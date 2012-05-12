@@ -233,6 +233,13 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 	public function youtube_user_text() {
 		$jf_yfvp_options = get_option( 'jf_yfvp_options', array() );
 
+		/* If options have been saved before, but no name specified, toss up a warning */
+		if ( ! empty( $jf_yfvp_options ) && empty( $jf_yfvp_options[ 'youtube_rss_feed'] ) ) {
+			?>
+			<div class="error" style="width: 615px;padding: 10px;"><?php _e( 'It looks like a Youtube username has not yet been entered, even though other options have been saved. Please note that we are unable to fetch your favorite videos until a username is provided.', 'youtube-favorite-video-posts' ); ?></div>
+			<?php
+		}
+
 		if ( ! isset( $jf_yfvp_options[ 'youtube_rss_feed' ] ) )
 			$jf_yfvp_options[ 'youtube_rss_feed' ] = '';
 		?>
@@ -415,14 +422,12 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 
 		/*  The feed URL we'll be grabbing. */
 		$youtube_feed_url = 'http://gdata.youtube.com/feeds/base/users/' . esc_attr( $youtube_options[ 'youtube_rss_feed' ] ) . '/favorites?alt=rss';
-		/*  The post type we'll be saving as. We designed it to be custom, but why not allow anything. */
 
 		if ( isset( $youtube_options[ 'post_type' ] ) )
 			$post_type = $youtube_options[ 'post_type' ];
 		else
 			$post_type = 'jf_yfvp_youtube';
 
-		/*  The post status we'll use. */
 		if ( isset( $youtube_options[ 'post_status' ] ) )
 			$post_status = $youtube_options[ 'post_status' ];
 		else
@@ -438,12 +443,10 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 		$youtube_feed = fetch_feed( $youtube_feed_url );
 		remove_filter( 'wp_feed_cache_transient_lifetime', array( $this, 'modify_simplepie_cache_lifetime' ) );
 
-		if ( ! is_wp_error( $youtube_feed ) ){
-			/*  Feed looks like a good object, continue. */
-
+		if ( ! is_wp_error( $youtube_feed ) ) {
 			$max_items = $youtube_feed->get_item_quantity( $max_fetch_items );
 			$youtube_items = $youtube_feed->get_items( 0, $max_items );
-			foreach( $youtube_items as $item ){
+			foreach( $youtube_items as $item ) {
 				$video_token = substr( $item->get_id(), 43 );
 
 				$video_embed_code = '<iframe width=\"' . absint( $youtube_options[ 'embed_width' ] ) .
@@ -466,18 +469,18 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 				/* We do our best to avoid duplicate videos. This will compare the existence of title/token in previous
 				 * videos and block the save if found. Keep this in mind if using the video title filter to do anything
 				 * fun. */
-				if ( get_page_by_title( $item_title, 'OBJECT', $post_type ) ){
+				if ( get_page_by_title( $item_title, 'OBJECT', $post_type ) ) {
 					$existing_hash = get_post_meta( get_page_by_title( $item_title, 'OBJECT', $post_type )->ID, 'jf_yfvp_hash', true );
 
 					if ( $item_hash == $existing_hash )
 						$skip = 1;
 					else
 						$skip = NULL;
-				}else{
+				} else {
 					$skip = NULL;
 				}
 
-				if ( ! $skip ){
+				if ( ! $skip ) {
 
 					$youtube_post = array(
 						'post_title' => $item_title,
