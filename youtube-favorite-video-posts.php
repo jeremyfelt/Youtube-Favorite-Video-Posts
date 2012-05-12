@@ -56,21 +56,17 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 		$this->create_content_type();
 
 		$current_options = get_option( 'jf_yfvp_options', array() );
-		$valid_fetch_intervals = array( 'hourly', 'twicedaily', 'daily' );
+		$valid_fetch_intervals = wp_get_schedules();
 
 		/* If the custom post type provided by this plugin is selected, flush the rewrite
 		 * rules so that the URLs can be pretty */
 		if ( isset( $current_options[ 'post_type' ] ) && 'jf_yfvp_youtube' == $current_options[ 'post_type' ] )
 			flush_rewrite_rules( false );
 
-		/* If a fetch interval has previously been selected, use that. Otherwise, go with hourly */
+		/* If a fetch interval has previously been selected, use that. Otherwise, we'll not schedule the event until settings save. */
 		if ( isset( $current_options[ 'fetch_interval' ] ) && in_array( $current_options[ 'fetch_interval' ], $valid_fetch_intervals ) )
-			$fetch_interval = $current_options[ 'fetch_interval' ];
-		else
-			$fetch_interval = 'hourly';
+			wp_schedule_event( ( time() + 120 ) , $current_options[ 'fetch_interval' ], 'jf_yfvp_process_feed' );
 
-		/* Schedule our WP Cron event to check the Youtube feed */
-		wp_schedule_event( ( time() + 60 ) , $fetch_interval, 'jf_yfvp_process_feed' );
 	}
 
 	/**
@@ -188,7 +184,7 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 		$next_scheduled_time = wp_next_scheduled( 'jf_yfvp_process_feed' ) + ( get_option( 'gmt_offset' ) * 3600 );
 		$user_current_time = time() + ( get_option( 'gmt_offset' ) * 3600 );
 		$time_till_cron = human_time_diff( $user_current_time, $next_scheduled_time );
-		$next_cron_date = date( 'H:i:sA', $next_scheduled_time );
+		$next_cron_date = date( 'g:i:sA', $next_scheduled_time );
 		?>
 		<h3>RSS Fetch Frequency</h3>
 		<p style="margin-left:12px; max-width: 630px;"><?php _e( 'This plugin currently depends on WP Cron operating fully as expected. In most cases, you should be able to select one of the intervals below and things will work. If not, please let <a href="http://www.jeremyfelt.com">me</a> know. By default, we check for new items on an hourly basis.', 'youtube-favorite-video-posts' ); ?></p>
@@ -245,12 +241,7 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 		if ( ! isset( $jf_yfvp_options[ 'post_type' ] ) )
 			$jf_yfvp_options[ 'post_type' ] = 'jf_yfvp_youtube';
 
-		$post_types = array( 'post', 'link' );
-		$all_post_types = get_post_types( array( '_builtin' => false ) );
-
-		foreach( $all_post_types as $p => $k ) {
-			$post_types[] = $p;
-		}
+		$post_types = array_merge( get_post_types( array( '_builtin' => false ) ), array( 'post', 'link' ) );
 
 		echo '<select id="jf_yfvp_post_type" name="jf_yfvp_options[post_type]">';
 
@@ -287,7 +278,7 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 	 * @todo: Custom intervals can be added to a WordPress install, so we should query those and offer as an option.
 	 */
 	public function fetch_interval_selection_text() {
-		$intervals = array( 'hourly', 'twicedaily', 'daily' );
+		$intervals = wp_get_schedules();
 
 		$jf_yfvp_options = get_option( 'jf_yfvp_options', array() );
 
@@ -296,8 +287,8 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 
 		echo '<select id="jf_yfvp_fetch_interval" name="jf_yfvp_options[fetch_interval]">';
 
-		foreach( $intervals as $i ){
-			echo '<option value="' . esc_attr( $i ) . '" ' . selected( $jf_yfvp_options[ 'fetch_interval' ], $i, false ) . '>' . esc_html( $i ) . '</option>';
+		foreach( $intervals as $i => $v ){
+			echo '<option value="' . esc_attr( $i ) . '" ' . selected( $jf_yfvp_options[ 'fetch_interval' ], $i, false ) . '>' . esc_html( $v['display'] ) . '</option>';
 		}
 
 		echo '</select>';
@@ -325,13 +316,9 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 	public function validate_options( $input ) {
 
 		$valid_post_status_options = array( 'draft', 'publish', 'private' );
-		$valid_fetch_interval_options = array( 'hourly', 'twicedaily', 'daily' );
+		$valid_fetch_interval_options = wp_get_schedules();
 
-		$valid_post_type_options = array( 'post', 'link' );
-		$all_post_types = get_post_types( array( '_builtin' => false ) );
-		foreach( $all_post_types as $p=>$k ){
-			$valid_post_type_options[] = $p;
-		}
+		$valid_post_type_options = array_merge( get_post_types( array( '_builtin' => false ) ), array( 'post', 'link' ) );
 
 		if( ! in_array( $input[ 'post_status' ], $valid_post_status_options ) )
 			$input[ 'post_status' ] = 'publish';
@@ -339,7 +326,7 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 		if( ! in_array( $input[ 'post_type' ], $valid_post_type_options ) )
 			$input[ 'post_type' ] = 'jf_yfvp_youtube';
 
-		if( ! in_array( $input[ 'fetch_interval' ], $valid_fetch_interval_options ) )
+		if( ! array_key_exists( $input[ 'fetch_interval' ], $valid_fetch_interval_options ) )
 			$input[ 'fetch_interval' ] = 'hourly';
 
 		/* It is possible the user just switched back to using our custom post type, so we should flush the rewrite rules */
