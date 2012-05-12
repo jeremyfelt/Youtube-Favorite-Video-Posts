@@ -274,8 +274,6 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 
 	/**
 	 * Provide an input to select the WP Cron interval to schedule the hook with
-	 *
-	 * @todo: Custom intervals can be added to a WordPress install, so we should query those and offer as an option.
 	 */
 	public function fetch_interval_selection_text() {
 		$intervals = wp_get_schedules();
