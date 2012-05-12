@@ -451,15 +451,22 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 					'\" src=\"http://www.youtube.com/embed/' .
 					esc_attr( $video_token ) . '\" frameborder=\"0\" allowfullscreen></iframe>';
 
-				/*  We're disabling the kses filters below, so we need to clean up the title as YouTube allows " and the like. */
-				$item_title = esc_html( $item->get_title() );
+				/* Allow other plugins or themes to alter or replace the post content before storing */
+				$video_embed_code = apply_filters( 'yfvp_new_video_embed_code', $video_embed_code, $video_token );
+
+				/* Allow other plugins or themes to alter or replace the post title before storing.
+				 * Also, we're disabling the kses filters below, so we need to clean up the title as
+				 * YouTube allows " and the like. */
+				$item_title = esc_html( apply_filters( 'yfvp_new_video_item_title', $item->get_title() ) );
 
 				/*  Create a hash of the video token to store as post meta in order to check for unique content
 				 * if a video of the same title is stored one day. */
 				$item_hash = md5( $video_token );
 
+				/* We do our best to avoid duplicate videos. This will compare the existence of title/token in previous
+				 * videos and block the save if found. Keep this in mind if using the video title filter to do anything
+				 * fun. */
 				if ( get_page_by_title( $item_title, 'OBJECT', $post_type ) ){
-					/*  Title already exists. */
 					$existing_hash = get_post_meta( get_page_by_title( $item_title, 'OBJECT', $post_type )->ID, 'jf_yfvp_hash', true );
 
 					if ( $item_hash == $existing_hash )
