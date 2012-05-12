@@ -43,7 +43,7 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 		/* Register the jf_yfvp_youtube custom post type */
 		add_action( 'init', array( $this, 'create_content_type' ) );
 
-		/* Our hook in WP Cron */
+		/* Our hook added when we schedule a WP Cron event */
 		add_action( 'jf_yfvp_process_feed', array( $this, 'process_feed' ) );
 	}
 
@@ -105,10 +105,8 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 	 */
 	public function edit_admin_icon(){
 		global $post_type;
-
 		if ( 'jf_yfvp_youtube' == $post_type )
 			echo '<style>#icon-edit { background: url("' . plugins_url( 'images/youtube-icon-32.png', __FILE__ ) . '") no-repeat; background-size: 32px 32px; }</style>';
-
 	}
 
 	/**
@@ -181,15 +179,25 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 	 * Describe the selection of the WP Cron interval we'll use
 	 */
 	public function interval_section_text() {
-		$next_scheduled_time = wp_next_scheduled( 'jf_yfvp_process_feed' ) + ( get_option( 'gmt_offset' ) * 3600 );
-		$user_current_time = time() + ( get_option( 'gmt_offset' ) * 3600 );
-		$time_till_cron = human_time_diff( $user_current_time, $next_scheduled_time );
-		$next_cron_date = date( 'g:i:sA', $next_scheduled_time );
-		?>
-		<h3>RSS Fetch Frequency</h3>
-		<p style="margin-left:12px; max-width: 630px;"><?php _e( 'This plugin currently depends on WP Cron operating fully as expected. In most cases, you should be able to select one of the intervals below and things will work. If not, please let <a href="http://www.jeremyfelt.com">me</a> know. By default, we check for new items on an hourly basis.', 'youtube-favorite-video-posts' ); ?></p>
-		<p style="margin-left:12px; max-width: 630px;"><?php printf( __( 'The next check of your Youtube favorites feed is scheduled to run at %1$s, which occurs in %2$s.', 'youtube-favorite-video-posts' ), $next_cron_date, $time_till_cron ); ?></p>
-		<?php
+
+		$next_scheduled_time = wp_next_scheduled( 'jf_yfvp_process_feed' );
+
+		if ( $next_scheduled_time ) {
+			$next_scheduled_time = $next_scheduled_time  + ( get_option( 'gmt_offset' ) * 3600 );
+			$user_current_time = time() + ( get_option( 'gmt_offset' ) * 3600 );
+			$time_till_cron = human_time_diff( $user_current_time, $next_scheduled_time );
+			$next_cron_date = date( 'g:i:sA', $next_scheduled_time );
+			?>
+			<h3>RSS Fetch Frequency</h3>
+			<p style="margin-left:12px; max-width: 630px;"><?php _e( 'This plugin currently depends on WP Cron operating fully as expected. In most cases, you should be able to select one of the intervals below and things will work. If not, please let <a href="http://www.jeremyfelt.com">me</a> know. By default, we check for new items on an hourly basis.', 'youtube-favorite-video-posts' ); ?></p>
+			<p style="margin-left:12px; max-width: 630px;"><?php printf( __( 'The next check of your Youtube favorites feed is scheduled to run at %1$s, which occurs in %2$s.', 'youtube-favorite-video-posts' ), $next_cron_date, $time_till_cron ); ?></p>
+			<?php
+		} else {
+			?>
+			<h3>RSS Fetch Frequency</h3>
+			<p style="margin-left:12px; max-width: 630px;"><?php _e( 'An interval has not yet been saved. Please select the frequency with which you would like this plugin to check your favorite video feed. The default of Once Hourly will be used if you do not change the interval before saving.', 'youtube-favorite-video-posts' ); ?></p>
+			<?php
+		}
 	}
 
 	/**
@@ -480,11 +488,7 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 					add_post_meta( $item_post_id, 'jf_yfvp_video_token', $video_token, true );
 				}
 			}
-		}else{
-			/*  Uhhh, feels a little shady to die silently, but for now that's all we got. */
 		}
 	}
 }
-
-/* Fire away */
 new Youtube_Favorite_Video_Posts_Foghlaim();
