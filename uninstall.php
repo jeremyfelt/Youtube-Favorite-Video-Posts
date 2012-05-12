@@ -13,5 +13,3 @@ if( ! defined( 'ABSPATH' ) && ! defined( 'WP_UNINSTALL_PLUGIN' ) )
 
 /*  Delete the afip_options */
 delete_option( 'jf_yfvp_options' );
-
-?>
