@@ -130,6 +130,7 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 			<ol style="margin-left:36px;">
 				<li><?php _e( 'Username must be filled in below. Email address will not work.', 'youtube-favorite-video-posts' ); ?></li>
 				<li><?php _e( 'The embed width and height settings will be applied to the iframe in your post content.', 'youtube-favorite-video-posts' ); ?></li>
+				<li><?php _e( 'If you would like to change the content or title before the new content is saved, you may be interested in the <a href="http://jeremyfelt.com/wordpress/2012/05/12/filters-in-youtube-favorite-video-posts/">available filters</a>.', 'youtube-favorite-video-posts' ); ?></li>
 			</ol>
 			<form method="POST" action="options.php">
 				<?php
@@ -186,11 +187,11 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 			$next_scheduled_time = $next_scheduled_time  + ( get_option( 'gmt_offset' ) * 3600 );
 			$user_current_time = time() + ( get_option( 'gmt_offset' ) * 3600 );
 			$time_till_cron = human_time_diff( $user_current_time, $next_scheduled_time );
-			$next_cron_date = date( 'g:i:sA', $next_scheduled_time );
+			$next_cron_date = date( 'g:i:sa', $next_scheduled_time );
 			?>
 			<h3>RSS Fetch Frequency</h3>
 			<p style="margin-left:12px; max-width: 630px;"><?php _e( 'This plugin currently depends on WP Cron operating fully as expected. In most cases, you should be able to select one of the intervals below and things will work. If not, please let <a href="http://www.jeremyfelt.com">me</a> know. By default, we check for new items on an hourly basis.', 'youtube-favorite-video-posts' ); ?></p>
-			<p style="margin-left:12px; max-width: 630px;"><?php printf( __( 'The next check of your Youtube favorites feed is scheduled to run at %1$s, which occurs in %2$s.', 'youtube-favorite-video-posts' ), $next_cron_date, $time_till_cron ); ?></p>
+			<p style="margin-left:12px; max-width: 630px;"><?php printf( __( 'Your Youtube favorites feed is scheduled to be loaded next in %1$s, at %2$s.', 'youtube-favorite-video-posts' ),$time_till_cron, $next_cron_date ); ?></p>
 			<?php
 		} else {
 			?>
