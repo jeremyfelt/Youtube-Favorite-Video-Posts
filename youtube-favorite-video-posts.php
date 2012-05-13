@@ -39,7 +39,7 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 		add_action( 'admin_head', array( $this, 'edit_admin_icon' ) );
 		add_action( 'admin_menu', array( $this, 'add_settings' ) );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
-
+		add_action( 'admin_init', array( $this, 'add_languages' ) );
 		/* Register the jf_yfvp_youtube custom post type */
 		add_action( 'init', array( $this, 'create_content_type' ) );
 
@@ -75,6 +75,13 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 	 */
 	public function deactivate_plugin(){
 		wp_clear_scheduled_hook( 'jf_yfvp_process_feed' );
+	}
+
+	/**
+	 * Add the text domain for plugin translation
+	 */
+	public function add_languages() {
+		load_plugin_textdomain( 'youtube-favorite-video-posts', false, basename( dirname( __FILE__ ) ) . '/lang' );
 	}
 
 	/**
