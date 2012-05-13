@@ -4,8 +4,8 @@ Contributors: jeremyfelt
 Donate link: http://www.jeremyfelt.com/wordpress/plugins/youtube-favorite-video-posts/
 Tags: youtube, custom post type, embed, video, rss, feed
 Requires at least: 3.2.1
-Tested up to: 3.3
-Stable tag: 0.3
+Tested up to: 3.4
+Stable tag: 1.0
 
 YouTube Favorite Video Posts grabs videos you mark as favorites in YouTube and adds them to WordPress under a custom post type.
 
@@ -25,11 +25,18 @@ Settings are available for:
 * Max Items To Fetch
     * If you aren't a regular YouTube favoriter, you may want to reduce this so that your server doesn't process the same items over and over again.
 * Post Type
-    * By default a new custom post type for YouTube favorites has been added. You can change this to any of your other custom post types.
+    * By default a new custom post type for YouTube favorites has been added. You can change this to any of your other custom post types or the WordPress default 'post'.
 * Default Post Status
     * Choose to publish the new posts immediately, or save them as drafts for later processing.
 * Feed Fetch Interval
-    * Defaults to hourly, but can be changed to either daily or twice daily.
+    * Defaults to hourly, but can be changed to any interval registered with your WordPress setup.
+
+Filters are available for:
+
+* 'yfvp_new_video_embed_code' - Alter or replace the video embed code before the new post is created
+* 'yfvp_new_video_item_title' - Alter or replace the video title before the new post is created
+
+Checkout the [example code for the new filters] (http://jeremyfelt.com/wordpress/2012/05/12/filters-in-youtube-favorite-video-posts).
 
 == Installation ==
 
@@ -50,6 +57,16 @@ That's it!
 1. An overview of the YouTube Favorite Video Posts settings screen.
 
 == Changelog ==
+= 1.0 =
+
+* Add filters to allow other themes and plugins to change the post content and title before saving
+* Allow the selection of any registered interval for Cron tasks
+* Better internationalization, everything is now attached to the youtube-favorite-video-posts text domain
+* Better handling of events when Youtube name has not yet been provided
+* Code cleanup, move everything to a class
+* Front and back end documentation cleanup
+* Confirmed support for upcoming WordPress 3.4 release
+
 = 0.3 =
 
 * Because of the default SimplePie cache, new items were only being pulled every 12 hours (at the least). Modified to make this feed fresh for every check.
@@ -64,6 +81,10 @@ That's it!
 * In which a plugin begins its life.
 
 == Upgrade Notice ==
+= 1.0 =
+
+* A bunch of great updates. Definitely upgrade.
+
 = 0.3 =
 
 * Things should feel nicer now. :)
