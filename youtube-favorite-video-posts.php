@@ -461,6 +461,7 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 				$video_guid = md5( $item->get_id() );
 
 				$video_token = substr( $item->get_id(), 43 );
+				$old_item_hash = md5( $video_token );
 
 				$video_embed_code = '<iframe width=\"' . absint( $youtube_options['embed_width'] ) .
 					'\" height=\"' . absint( $youtube_options['embed_height'] ) .
@@ -476,7 +477,29 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 				$original_item_title = $item->get_title();
 				$item_title = esc_html( apply_filters( 'yfvp_new_video_item_title', $original_item_title ) );
 
-				$existing_items = get_posts( array(
+				/**
+				 * Our previous hash management was ugly, so now we need to check for the
+				 * existence of the old hash before checking the existence of the new hash.
+				 * If we do happen to find an old hash, we'll update it immediately with
+				 * the newer hash so that we can get rid of this code in the next release.
+				 */
+				$existing_old_item = get_posts( array(
+				                                'post_type' => $post_type,
+				                                'numberposts' => 1,
+				                                'post_status' => array( 'publish', 'draft', 'private' ),
+				                                'meta_query' => array(
+					                                array(
+						                                'key' => 'jf_yfvp_hash',
+						                                'value' => $old_item_hash,
+					                                ),
+				                                ),
+				                                ));
+
+				if ( ! empty( $existing_old_item ) ) {
+					update_post_meta( $existing_old_item[0]->ID, 'jf_yfvp_hash', $video_guid );
+					$existing_items = $existing_old_item;
+				} else {
+					$existing_items = get_posts( array(
 				                                  'post_type' => $post_type,
 				                                  'numberposts' => 1,
 				                                  'post_status' => array( 'publish', 'draft', 'private' ),
@@ -486,7 +509,8 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 						                                  'value' => $video_guid,
 					                                  ),
 				                                  ),
-				                             ));
+				                                 ));
+				}
 
 				// If we come back empty on our meta query, we should be ok to insert the video as normal
 				if ( empty ( $existing_items ) ) {
