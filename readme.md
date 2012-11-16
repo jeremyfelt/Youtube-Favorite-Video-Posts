@@ -1,15 +1,15 @@
-=== YouTube Favorite Video Posts ===
+# YouTube Favorite Video Posts
 
-Contributors: jeremyfelt
-Donate link: http://jeremyfelt.com/wordpress/plugins/youtube-favorite-video-posts/
-Tags: youtube, custom post type, embed, video, rss, feed
-Requires at least: 3.2.1
-Tested up to: 3.5
-Stable tag: 1.1
+* Contributors: jeremyfelt
+* Donate link: http://jeremyfelt.com/wordpress/plugins/youtube-favorite-video-posts/
+* Tags: youtube, custom post type, embed, video, rss, feed
+* Requires at least: 3.2.1
+* Tested up to: 3.5
+* Stable tag: 1.1
 
-YouTube Favorite Video Posts grabs videos you mark as favorites in YouTube and adds them to WordPress under a custom post type.
+> YouTube Favorite Video Posts grabs videos you mark as favorites in YouTube and adds them to WordPress under a custom post type.
 
-== Description ==
+## Description
 
 YouTube Favorite Video Posts works in the background to grab videos you mark as favorites in YouTube. The feed is parsed into
 new posts in WordPress and videos are automatically embedded in the content of those posts.
@@ -38,7 +38,7 @@ Filters are available for:
 
 Checkout the [example code for the new filters] (http://jeremyfelt.com/wordpress/2012/05/12/filters-in-youtube-favorite-video-posts).
 
-== Installation ==
+## Installation
 
 1. Upload 'youtube-favorite-video-posts' to your plugin directory, usually 'wp-content/plugins/', or install automatically via your WordPress admin page.
 1. Activate YouTube Favorite Video Posts in your plugin menu.
@@ -46,26 +46,24 @@ Checkout the [example code for the new filters] (http://jeremyfelt.com/wordpress
 
 That's it!
 
-== Frequently Asked Questions ==
+## Frequently Asked Questions
 
-= Why aren't there any FAQs? =
+### Why aren't there any FAQs?
 
 *  Because nobody has asked a question yet.
 
-== Screenshots ==
+## Screenshots
 
 1. An overview of the YouTube Favorite Video Posts settings screen.
 
-== Changelog ==
+## Changelog
 
-= 1.1 =
-
+### 1.1
 * Smarter hashing of uniqueness, should handle Youtube video title changes
 * Better original title handling. You can now modify the title through a filter without worrying about it causing duplicates
 * Code cleanup
 
-= 1.0 =
-
+### 1.0
 * Add filters to allow other themes and plugins to change the post content and title before saving
 * Allow the selection of any registered interval for Cron tasks
 * Better internationalization, everything is now attached to the youtube-favorite-video-posts text domain
@@ -74,33 +72,26 @@ That's it!
 * Front and back end documentation cleanup
 * Confirmed support for upcoming WordPress 3.4 release
 
-= 0.3 =
-
+### 0.3
 * Because of the default SimplePie cache, new items were only being pulled every 12 hours (at the least). Modified to make this feed fresh for every check.
 
-= 0.2 =
-
+### 0.2
 * Video titles with double quotes were not saving correctly. Added appropriate escaping.
 * General code cleanup.
 
-= 0.1 =
-
+### 0.1
 * In which a plugin begins its life.
 
-== Upgrade Notice ==
+## Upgrade Notice
 
-= 1.1 =
-
+### 1.1
 * Upgrades some of the hashing and video handling to allow for better future customization.
 
-= 1.0 =
-
+### 1.0
 * A bunch of great updates. Definitely upgrade.
 
-= 0.3 =
-
+### 0.3
 * Things should feel nicer now. :)
 
-= 0.1 =
-
+### 0.1
 * Initial installation.
