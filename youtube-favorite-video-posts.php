@@ -506,6 +506,16 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 					add_post_meta( $item_post_id, 'jf_yfvp_hash', $video_guid, true );
 					add_post_meta( $item_post_id, 'jf_yfvp_video_token', $video_token, true );
 					add_post_meta( $item_post_id, 'jf_yfvp_original_title', sanitize_title( $original_item_title ), true );
+				} else {
+					$original_meta_title = get_post_meta( $existing_items[0]->ID, 'jf_yfvp_original_title', true );
+					/*
+					 * If the current item's original title does not match the matched post's original title,
+					 * update it with the current filtered version of the new item title. *whew*
+					 */
+					if ( $original_item_title !== $original_meta_title ) {
+						wp_update_post( array( 'ID' => $existing_items[0]->ID, 'post_title' => $item_title ) );
+						update_post_meta( $existing_items[0]->ID, 'jf_yfvp_original_title', $original_item_title );
+					}
 				}
 			}
 		}
