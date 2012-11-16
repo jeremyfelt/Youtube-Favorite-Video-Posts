@@ -473,7 +473,8 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 				/* Allow other plugins or themes to alter or replace the post title before storing.
 				 * Also, we're disabling the kses filters below, so we need to clean up the title as
 				 * YouTube allows " and the like. */
-				$item_title = esc_html( apply_filters( 'yfvp_new_video_item_title', $item->get_title() ) );
+				$original_item_title = $item->get_title();
+				$item_title = esc_html( apply_filters( 'yfvp_new_video_item_title', $original_item_title ) );
 
 				$existing_items = get_posts( array(
 				                                  'post_type' => $post_type,
@@ -504,6 +505,7 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 					kses_init_filters();
 					add_post_meta( $item_post_id, 'jf_yfvp_hash', $video_guid, true );
 					add_post_meta( $item_post_id, 'jf_yfvp_video_token', $video_token, true );
+					add_post_meta( $item_post_id, 'jf_yfvp_original_title', sanitize_title( $original_item_title ), true );
 				}
 			}
 		}
