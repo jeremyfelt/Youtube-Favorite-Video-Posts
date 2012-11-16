@@ -262,7 +262,7 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 	public function post_type_selection_text() {
 		$jf_yfvp_options = get_option( 'jf_yfvp_options', array() );
 
-		if ( ! isset( $jf_yfvp_options[po'st_type'] ) )
+		if ( ! isset( $jf_yfvp_options['post_type'] ) )
 			$jf_yfvp_options['post_type'] = 'jf_yfvp_youtube';
 
 		$post_types = array_merge( get_post_types( array( '_builtin' => false ) ), array( 'post', 'link' ) );
@@ -456,6 +456,10 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 			$max_items = $youtube_feed->get_item_quantity( $max_fetch_items );
 			$youtube_items = $youtube_feed->get_items( 0, $max_items );
 			foreach( $youtube_items as $item ) {
+
+				// Hash the guid element from the RSS feed to determine uniqueness, since yeah... guid.
+				$video_guid = md5( $item->get_id() );
+
 				$video_token = substr( $item->get_id(), 43 );
 
 				$video_embed_code = '<iframe width=\"' . absint( $youtube_options['embed_width'] ) .
@@ -471,25 +475,20 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 				 * YouTube allows " and the like. */
 				$item_title = esc_html( apply_filters( 'yfvp_new_video_item_title', $item->get_title() ) );
 
-				/*  Create a hash of the video token to store as post meta in order to check for unique content
-				 * if a video of the same title is stored one day. */
-				$item_hash = md5( $video_token );
+				$existing_items = get_posts( array(
+				                                  'post_type' => $post_type,
+				                                  'numberposts' => 1,
+				                                  'post_status' => array( 'publish', 'draft', 'private' ),
+				                                  'meta_query' => array(
+					                                  array(
+						                                  'key' => 'jf_yfvp_hash',
+						                                  'value' => $video_guid,
+					                                  ),
+				                                  ),
+				                             ));
 
-				/* We do our best to avoid duplicate videos. This will compare the existence of title/token in previous
-				 * videos and block the save if found. Keep this in mind if using the video title filter to do anything
-				 * fun. */
-				if ( get_page_by_title( $item_title, 'OBJECT', $post_type ) ) {
-					$existing_hash = get_post_meta( get_page_by_title( $item_title, 'OBJECT', $post_type )->ID, 'jf_yfvp_hash', true );
-
-					if ( $item_hash == $existing_hash )
-						$skip = 1;
-					else
-						$skip = NULL;
-				} else {
-					$skip = NULL;
-				}
-
-				if ( ! $skip ) {
+				// If we come back empty on our meta query, we should be ok to insert the video as normal
+				if ( empty ( $existing_items ) ) {
 
 					$youtube_post = array(
 						'post_title' => $item_title,
@@ -503,7 +502,7 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 					kses_remove_filters();
 					$item_post_id = wp_insert_post( $youtube_post );
 					kses_init_filters();
-					add_post_meta( $item_post_id, 'jf_yfvp_hash', $item_hash, true );
+					add_post_meta( $item_post_id, 'jf_yfvp_hash', $video_guid, true );
 					add_post_meta( $item_post_id, 'jf_yfvp_video_token', $video_token, true );
 				}
 			}
