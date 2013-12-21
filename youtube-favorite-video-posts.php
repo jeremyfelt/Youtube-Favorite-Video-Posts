@@ -140,7 +140,6 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 	public function view_settings(){
 		?>
 		<div class="wrap">
-			<div class="icon32" id="icon-options-general"></div>
 			<h2><?php _e( 'YouTube Favorite Video Posts', 'youtube-favorite-video-posts' ); ?></h2>
 			<h3><?php _e( 'Overview', 'youtube-favorite-video-posts' ); ?>:</h3>
 			<p style="margin-left:12px; max-width:640px;"><?php _e( 'The settings below will help determine where to check for your favorite YouTube videos, how often to look for them, and how they should be stored once new items are found.', 'youtube-favorite-video-posts' ); ?></p>
