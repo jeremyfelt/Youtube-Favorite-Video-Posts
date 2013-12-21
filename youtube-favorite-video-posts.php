@@ -110,7 +110,7 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 		}
 
 		if ( $file == $this_plugin ) {
-			$settings_link = '<a href="' . site_url( '/wp-admin/options-general.php?page=youtube-favorite-video-posts-settings' ) . '">' . __( 'Settings', 'youtube-favorite-video-posts' ) . '</a>';
+			$settings_link = '<a href="' . esc_url( site_url( '/wp-admin/options-general.php?page=youtube-favorite-video-posts-settings' ) ) . '">' . __( 'Settings', 'youtube-favorite-video-posts' ) . '</a>';
 			array_unshift( $links, $settings_link );
 		}
 		return $links;
