@@ -548,12 +548,12 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 				if ( empty ( $existing_items ) ) {
 
 					$youtube_post = array(
-						'post_title' => $item_title,
+						'post_title'   => $item_title,
 						'post_content' => $video_embed_code,
-						'post_author' => 1,
-						'post_status' => $post_status,
-						'post_type' => $post_type,
-						'filter' => true,
+						'post_author'  => 1,
+						'post_status'  => $post_status,
+						'post_type'    => $post_type,
+						'filter'       => true,
 					);
 
 					kses_remove_filters();
