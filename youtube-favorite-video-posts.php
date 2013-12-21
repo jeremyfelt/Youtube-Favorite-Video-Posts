@@ -3,7 +3,7 @@
 Plugin Name: YouTube Favorite Video Posts
 Plugin URI: http://jeremyfelt.com/wordpress/plugins/youtube-favorite-video-posts
 Description: Checks your YouTube favorite videos RSS feed and creates new posts in a custom post type.
-Version: 1.2-working
+Version: 1.2
 Author: Jeremy Felt
 Author URI: http://jeremyfelt.com
 License: GPL2
