@@ -61,13 +61,14 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 
 		/* If the custom post type provided by this plugin is selected, flush the rewrite
 		 * rules so that the URLs can be pretty */
-		if ( isset( $current_options['post_type'] ) && 'jf_yfvp_youtube' === $current_options['post_type'] )
+		if ( isset( $current_options['post_type'] ) && 'jf_yfvp_youtube' === $current_options['post_type'] ) {
 			flush_rewrite_rules( false );
+		}
 
 		/* If a fetch interval has previously been selected, use that. Otherwise, we'll not schedule the event until settings save. */
-		if ( isset( $current_options['fetch_interval'] ) && in_array( $current_options['fetch_interval'], $valid_fetch_intervals ) )
+		if ( isset( $current_options['fetch_interval'] ) && in_array( $current_options['fetch_interval'], $valid_fetch_intervals ) ) {
 			wp_schedule_event( ( time() + 120 ) , $current_options['fetch_interval'], 'jf_yfvp_process_feed' );
-
+		}
 	}
 
 	/**
@@ -98,8 +99,9 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 	public function add_plugin_action_links( $links, $file ){
 		static $this_plugin;
 
-		if ( ! $this_plugin )
+		if ( ! $this_plugin ) {
 			$this_plugin = plugin_basename( __FILE__ );
+		}
 
 		if ( $file == $this_plugin ) {
 			$settings_link = '<a href="' . site_url( '/wp-admin/options-general.php?page=youtube-favorite-video-posts-settings' ) . '">' . __( 'Settings', 'youtube-favorite-video-posts' ) . '</a>';
@@ -113,8 +115,9 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 	 */
 	public function edit_admin_icon(){
 		global $post_type;
-		if ( 'jf_yfvp_youtube' === $post_type )
+		if ( 'jf_yfvp_youtube' === $post_type ) {
 			echo '<style>#icon-edit { background: url("' . plugins_url( 'images/youtube-icon-32.png', __FILE__ ) . '") no-repeat; background-size: 32px 32px; }</style>';
+		}
 	}
 
 	/**
@@ -215,8 +218,9 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 	public function embed_width_text() {
 		$jf_yfvp_options = get_option( 'jf_yfvp_options', array() );
 
-		if ( ! isset( $jf_yfvp_options['embed_width'] ) )
+		if ( ! isset( $jf_yfvp_options['embed_width'] ) ) {
 			$jf_yfvp_options['embed_width'] = 330;
+		}
 		?>
 		<input style="width: 100px;" type="text" id="jf_yfvp_embed_width" name="jf_yfvp_options[embed_width]" value="<?php echo esc_attr( $jf_yfvp_options['embed_width'] ); ?>" />
 		<?php
@@ -228,9 +232,9 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 	public function embed_height_text() {
 		$jf_yfvp_options = get_option( 'jf_yfvp_options', array() );
 
-		if ( ! isset( $jf_yfvp_options['embed_height'] ) )
+		if ( ! isset( $jf_yfvp_options['embed_height'] ) ) {
 			$jf_yfvp_options['embed_height'] = 270;
-
+		}
 		?>
 		<input style="width: 100px;" type="text" id="jf_yfvp_embed_height" name="jf_yfvp_options[embed_height]" value="<?php echo esc_attr( $jf_yfvp_options['embed_height'] ); ?>" />
 		<?php
@@ -249,8 +253,9 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 			<?php
 		}
 
-		if ( ! isset( $jf_yfvp_options['youtube_rss_feed'] ) )
+		if ( ! isset( $jf_yfvp_options['youtube_rss_feed'] ) ) {
 			$jf_yfvp_options['youtube_rss_feed'] = '';
+		}
 		?>
 		<input style="width: 200px;" type="text" id="jf_yfvp_youtube_rss_feed" name="jf_yfvp_options[youtube_rss_feed]" value="<?php echo esc_attr( $jf_yfvp_options['youtube_rss_feed'] ); ?>" />
 		<?php
@@ -262,8 +267,9 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 	public function post_type_selection_text() {
 		$jf_yfvp_options = get_option( 'jf_yfvp_options', array() );
 
-		if ( ! isset( $jf_yfvp_options['post_type'] ) )
+		if ( ! isset( $jf_yfvp_options['post_type'] ) ) {
 			$jf_yfvp_options['post_type'] = 'jf_yfvp_youtube';
+		}
 
 		$post_types = array_merge( get_post_types( array( '_builtin' => false ) ), array( 'post', 'link' ) );
 
@@ -282,8 +288,9 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 	public function post_status_selection_text() {
 		$jf_yfvp_options = get_option( 'jf_yfvp_options', array() );
 
-		if ( ! isset( $jf_yfvp_options['post_status'] ) )
+		if ( ! isset( $jf_yfvp_options['post_status'] ) ) {
 			$jf_yfvp_options['post_status'] = 'publish';
+		}
 
 		$post_statii = array( 'draft', 'publish', 'private' );
 
@@ -304,8 +311,9 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 
 		$jf_yfvp_options = get_option( 'jf_yfvp_options', array() );
 
-		if ( ! isset( $jf_yfvp_options['fetch_interval'] ) )
+		if ( ! isset( $jf_yfvp_options['fetch_interval'] ) ) {
 			$jf_yfvp_options['fetch_interval'] = 'hourly';
+		}
 
 		echo '<select id="jf_yfvp_fetch_interval" name="jf_yfvp_options[fetch_interval]">';
 
@@ -322,8 +330,9 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 	public function max_fetch_items_text() {
 		$jf_yfvp_options = get_option( 'jf_yfvp_options', array() );
 
-		if ( ! isset( $jf_yfvp_options['max_fetch_items'] ) )
+		if ( ! isset( $jf_yfvp_options['max_fetch_items'] ) ) {
 			$jf_yfvp_options['max_fetch_items'] = 5;
+		}
 		?>
 		<input type="text" id="jf_yfvp_max_fetch_items" name="jf_yfvp_options[max_fetch_items]" value="<?php echo esc_attr( $jf_yfvp_options['max_fetch_items'] ); ?>" />
 		<?php
@@ -342,18 +351,22 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 
 		$valid_post_type_options = array_merge( get_post_types( array( '_builtin' => false ) ), array( 'post', 'link' ) );
 
-		if( ! in_array( $input['post_status'], $valid_post_status_options ) )
+		if( ! in_array( $input['post_status'], $valid_post_status_options ) ) {
 			$input['post_status'] = 'publish';
+		}
 
-		if( ! in_array( $input['post_type'], $valid_post_type_options ) )
+		if( ! in_array( $input['post_type'], $valid_post_type_options ) ) {
 			$input['post_type'] = 'jf_yfvp_youtube';
+		}
 
-		if( ! array_key_exists( $input['fetch_interval'], $valid_fetch_interval_options ) )
+		if( ! array_key_exists( $input['fetch_interval'], $valid_fetch_interval_options ) ) {
 			$input['fetch_interval'] = 'hourly';
+		}
 
 		/* It is possible the user just switched back to using our custom post type, so we should flush the rewrite rules */
-		if ( 'jf_yfvp_youtube' === $input['post_type'] )
+		if ( 'jf_yfvp_youtube' === $input['post_type'] ) {
 			flush_rewrite_rules( false );
+		}
 
 		/*  This seems to be the only place we can reset the scheduled Cron if the frequency is changed, so here goes. */
 		wp_clear_scheduled_hook( 'jf_yfvp_process_feed' );
@@ -426,26 +439,30 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 		$youtube_options = get_option( 'jf_yfvp_options', array() );
 
 		/* No username, no feed. No feed, no work. */
-		if ( empty( $youtube_options['youtube_rss_feed'] ) )
+		if ( empty( $youtube_options['youtube_rss_feed'] ) ) {
 			return;
+		}
 
 		/*  The feed URL we'll be grabbing. */
 		$youtube_feed_url = 'http://gdata.youtube.com/feeds/base/users/' . esc_attr( $youtube_options['youtube_rss_feed'] ) . '/favorites?alt=rss';
 
-		if ( isset( $youtube_options['post_type'] ) )
+		if ( isset( $youtube_options['post_type'] ) ) {
 			$post_type = $youtube_options['post_type'];
-		else
+		} else {
 			$post_type = 'jf_yfvp_youtube';
+		}
 
-		if ( isset( $youtube_options['post_status'] ) )
+		if ( isset( $youtube_options['post_status'] ) ) {
 			$post_status = $youtube_options['post_status'];
-		else
+		} else {
 			$post_status = 'publish';
+		}
 
-		if ( isset( $youtube_options['max_fetch_items'] ) )
+		if ( isset( $youtube_options['max_fetch_items'] ) ) {
 			$max_fetch_items = absint( $youtube_options['max_fetch_items'] );
-		else
+		} else {
 			$max_fetch_items = 5;
+		}
 
 		/*  Now fetch with the WordPress SimplePie function. */
 		add_filter( 'wp_feed_cache_transient_lifetime', array( $this, 'modify_simplepie_cache_lifetime' ) );
