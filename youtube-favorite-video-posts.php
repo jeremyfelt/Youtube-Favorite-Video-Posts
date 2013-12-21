@@ -114,14 +114,10 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 	 * Add some style to the plugin with a YouTube icon at the top of the page.
 	 */
 	public function edit_admin_icon(){
-		global $post_type, $wp_version;
+		global $wp_version;
 
 		if ( 1 !== version_compare( '3.8', $wp_version ) ) {
 			?><style>#menu-posts-jf_yfvp_youtube .menu-icon-post div.wp-menu-image:before { content: '\f126'; }</style><?php
-		}
-
-		if ( 'jf_yfvp_youtube' === $post_type ) {
-			echo '<style>#icon-edit { background: url("' . plugins_url( 'images/youtube-icon-32.png', __FILE__ ) . '") no-repeat; background-size: 32px 32px; }</style>';
 		}
 	}
 
