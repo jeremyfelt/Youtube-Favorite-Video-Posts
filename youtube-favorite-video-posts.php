@@ -394,39 +394,41 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 	 * Register our custom post type–jf_yfvp_youtube–for possible use with the plugin.
 	 */
 	public function create_content_type() {
-		register_post_type( 'jf_yfvp_youtube',
-			array(
-			     'labels' => array(
-				     'name' => __( 'YouTube', 'youtube-favorite-video-posts' ),
-				     'singular_name' => __( 'YouTube Favorite', 'youtube-favorite-video-posts' ),
-				     'all_items' => __( 'All YouTube Favorites', 'youtube-favorite-video-posts' ),
-				     'add_new_item' => __( 'Add YouTube Favorite', 'youtube-favorite-video-posts' ),
-				     'edit_item' => __( 'Edit YouTube Favorite', 'youtube-favorite-video-posts' ),
-				     'new_item' => __( 'New YouTube Favorite', 'youtube-favorite-video-posts' ),
-				     'view_item' => __( 'View YouTube Favorite', 'youtube-favorite-video-posts' ),
-				     'search_items' => __( 'Search YouTube Favorites', 'youtube-favorite-video-posts' ),
-				     'not_found' => __( 'No YouTube Favorites found', 'youtube-favorite-video-posts' ),
-				     'not_found_in_trash' => __( 'No YouTube Favorites found in trash', 'youtube-favorite-video-posts' ),
-			     ),
-			     'description' => __( 'YouTube posts created by the YouTube Favorite Video Posts plugin.', 'youtube-favorite-video-posts' ),
-			     'public' => true,
-			     'menu_position' => 5,
-			     'hierarchical' => false,
-			     'supports' => array (
-				     'title',
-				     'editor',
-				     'author',
-				     'custom-fields',
-				     'comments',
-				     'revisions',
-			     ),
-			     'has_archive' => true,
-			     'rewrite' => array(
-				     'slug' => 'youtube',
-				     'with_front' => false
-			     ),
-			)
+		$labels = array(
+			'name' => __( 'YouTube', 'youtube-favorite-video-posts' ),
+			'singular_name' => __( 'YouTube Favorite', 'youtube-favorite-video-posts' ),
+			'all_items' => __( 'All YouTube Favorites', 'youtube-favorite-video-posts' ),
+			'add_new_item' => __( 'Add YouTube Favorite', 'youtube-favorite-video-posts' ),
+			'edit_item' => __( 'Edit YouTube Favorite', 'youtube-favorite-video-posts' ),
+			'new_item' => __( 'New YouTube Favorite', 'youtube-favorite-video-posts' ),
+			'view_item' => __( 'View YouTube Favorite', 'youtube-favorite-video-posts' ),
+			'search_items' => __( 'Search YouTube Favorites', 'youtube-favorite-video-posts' ),
+			'not_found' => __( 'No YouTube Favorites found', 'youtube-favorite-video-posts' ),
+			'not_found_in_trash' => __( 'No YouTube Favorites found in trash', 'youtube-favorite-video-posts' ),
 		);
+
+		$args = array(
+			'labels' => $labels,
+			'description' => __( 'YouTube posts created by the YouTube Favorite Video Posts plugin.', 'youtube-favorite-video-posts' ),
+			'public' => true,
+			'menu_position' => 5,
+			'hierarchical' => false,
+			'supports' => array (
+				'title',
+				'editor',
+				'author',
+				'custom-fields',
+				'comments',
+				'revisions',
+			),
+			'has_archive' => true,
+			'rewrite' => array(
+				'slug' => 'youtube',
+				'with_front' => false
+			),
+		);
+
+		register_post_type( 'jf_yfvp_youtube', $args );
 	}
 
 	/**
