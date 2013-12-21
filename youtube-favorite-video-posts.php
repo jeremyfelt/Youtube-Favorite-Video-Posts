@@ -36,7 +36,7 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 		add_filter( 'plugin_action_links', array( $this, 'add_plugin_action_links' ), 10, 2 );
 
 		/*  Add our custom settings to the admin menu. */
-		add_action( 'admin_head', array( $this, 'edit_admin_icon' ) );
+		add_action( 'admin_head', array( $this, 'dashboard_style' ) );
 		add_action( 'admin_menu', array( $this, 'add_settings' ) );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		add_action( 'admin_init', array( $this, 'add_languages' ) );
@@ -113,7 +113,7 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 	/**
 	 * Add some style to the plugin with a YouTube icon at the top of the page.
 	 */
-	public function edit_admin_icon(){
+	public function dashboard_style(){
 		global $wp_version;
 
 		if ( 1 !== version_compare( '3.8', $wp_version ) ) {
