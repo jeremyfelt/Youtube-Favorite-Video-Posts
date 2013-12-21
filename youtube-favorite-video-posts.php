@@ -404,7 +404,6 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 			     ),
 			     'description' => __( 'YouTube posts created by the YouTube Favorite Video Posts plugin.', 'youtube-favorite-video-posts' ),
 			     'public' => true,
-			     'menu_icon' => plugins_url( '/images/youtube-icon-16.png', __FILE__ ),
 			     'menu_position' => 5,
 			     'hierarchical' => false,
 			     'supports' => array (
