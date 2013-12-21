@@ -166,16 +166,20 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 	 */
 	public function register_settings(){
 		register_setting( 'jf_yfvp_options', 'jf_yfvp_options', array( $this, 'validate_options' ) );
-		add_settings_section( 'jf_yfvp_section_main', '', array( $this, 'main_section_text' ), 'jf_yfvp' );
+
+		add_settings_section( 'jf_yfvp_section_main',      '', array( $this, 'main_section_text'      ), 'jf_yfvp' );
 		add_settings_section( 'jf_yfvp_section_post_type', '', array( $this, 'post_type_section_text' ), 'jf_yfvp' );
-		add_settings_section( 'jf_yfvp_section_interval', '', array( $this, 'interval_section_text' ), 'jf_yfvp' );
-		add_settings_field( 'jf_yfvp_youtube_rss_feed', 'YouTube Username:', array( $this, 'youtube_user_text' ), 'jf_yfvp', 'jf_yfvp_section_main' );
-		add_settings_field( 'jf_yfvp_embed_width', 'Default Embed Width:', array( $this, 'embed_width_text' ), 'jf_yfvp', 'jf_yfvp_section_main' );
-		add_settings_field( 'jf_yfvp_embed_height', 'Default Embed Height:', array( $this, 'embed_height_text' ), 'jf_yfvp', 'jf_yfvp_section_main' );
-		add_settings_field( 'jf_yfvp_max_fetch_items', 'Max Items To Fetch:', array( $this, 'max_fetch_items_text' ), 'jf_yfvp', 'jf_yfvp_section_main' );
-		add_settings_field( 'jf_yfvp_post_type', 'Post Type:', array( $this, 'post_type_selection_text' ), 'jf_yfvp', 'jf_yfvp_section_post_type' );
-		add_settings_field( 'jf_yfvp_post_status', __( 'Default Post Status:', 'youtube-favorite-video-posts' ) , array( $this, 'post_status_selection_text' ), 'jf_yfvp', 'jf_yfvp_section_post_type' );
-		add_settings_field( 'jf_yfvp_fetch_interval', 'Feed Fetch Interval: ', array( $this, 'fetch_interval_selection_text' ), 'jf_yfvp', 'jf_yfvp_section_interval' );
+		add_settings_section( 'jf_yfvp_section_interval',  '', array( $this, 'interval_section_text'  ), 'jf_yfvp' );
+
+		add_settings_field( 'jf_yfvp_youtube_rss_feed', 'YouTube Username:',     array( $this, 'youtube_user_text'        ), 'jf_yfvp', 'jf_yfvp_section_main' );
+		add_settings_field( 'jf_yfvp_embed_width',      'Default Embed Width:',  array( $this, 'embed_width_text'         ), 'jf_yfvp', 'jf_yfvp_section_main' );
+		add_settings_field( 'jf_yfvp_embed_height',     'Default Embed Height:', array( $this, 'embed_height_text'        ), 'jf_yfvp', 'jf_yfvp_section_main' );
+		add_settings_field( 'jf_yfvp_max_fetch_items',  'Max Items To Fetch:',   array( $this, 'max_fetch_items_text'     ), 'jf_yfvp', 'jf_yfvp_section_main' );
+
+		add_settings_field( 'jf_yfvp_post_type',        'Post Type:',            array( $this, 'post_type_selection_text' ), 'jf_yfvp', 'jf_yfvp_section_post_type' );
+		add_settings_field( 'jf_yfvp_post_status',      __( 'Default Post Status:', 'youtube-favorite-video-posts' ) , array( $this, 'post_status_selection_text' ), 'jf_yfvp', 'jf_yfvp_section_post_type' );
+
+		add_settings_field( 'jf_yfvp_fetch_interval',   'Feed Fetch Interval: ', array( $this, 'fetch_interval_selection_text' ), 'jf_yfvp', 'jf_yfvp_section_interval' );
 	}
 
 	/**
