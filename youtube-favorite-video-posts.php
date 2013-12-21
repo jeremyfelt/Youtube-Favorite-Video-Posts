@@ -360,7 +360,7 @@ class Youtube_Favorite_Video_Posts_Foghlaim {
 		$valid_post_status_options = array( 'draft', 'publish', 'private' );
 		$valid_fetch_interval_options = wp_get_schedules();
 
-		$valid_post_type_options = array_merge( get_post_types( array( '_builtin' => false ) ), array( 'post', 'link' ) );
+		$valid_post_type_options = array_merge( get_post_types( array( '_builtin' => false ) ), array( 'post' ) );
 
 		if( ! in_array( $input['post_status'], $valid_post_status_options ) ) {
 			$input['post_status'] = 'publish';
